@@ -1,4 +1,4 @@
-Generates Yandex Allure 2 report and serve it.
+[Docker container](https://cloud.docker.com/repository/docker/andgineer/allure) that generates Yandex Allure 2 report and serve it.
 
 To generate report (test results should be in ./allure-results, result will be in ./allure-report)
 
@@ -8,5 +8,5 @@ to serve report on port 8800:
 
     docker run --rm -it -v ${PWD}/allure-results:/allure-results -v ${PWD}/allure-report:/allu-report -p 8800:80 docker masterandrey/docker-allure ./allure serve -p 80 /allure-results
 
-
+Example of report see in [my blog](https://sorokin.engineer/posts/en/pytest_allure_selenium_auto_screenshot.html)
 
