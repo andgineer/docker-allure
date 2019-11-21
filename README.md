@@ -1,4 +1,4 @@
-[Docker container](https://cloud.docker.com/repository/docker/andgineer/allure) that generates Yandex Allure 2 report and serve it.
+[Docker container](https://hub.docker.com/r/andgineer/allure) that generates Yandex Allure 2 report and serve it.
 
 To generate report (test results should be in ./allure-results, result will be in ./allure-report)
 
