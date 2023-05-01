@@ -1,13 +1,14 @@
 FROM openjdk:8-jre
 
-COPY allure-2.0.1.tgz /
+ENV ALLURE="allure-2.21.0"
+COPY "${ALLURE}.tgz" /
 
 RUN apt-get update \
     && apt-get install tar \
-    && tar -xvf allure-2.0.1.tgz \
-    && chmod -R +x /allure-2.0.1/bin
+    && tar -xvf "${ALLURE}.tgz" \
+    && chmod -R +x /${ALLURE}/bin
 
 VOLUME ["/allure-results"]
 VOLUME ["/allure-report"]
 
-WORKDIR /allure-2.0.1/bin
+WORKDIR /${ALLURE}/bin
