@@ -29,4 +29,8 @@ to serve report on port `8800`:
 There are test results in `./allure-results` folder in this repo, so you can serv report
 with the command above on `localhost:8800`.
 
+## Allure Releases
+
+[allure-framework](https://github.com/allure-framework/allure2/releases)
+
 
