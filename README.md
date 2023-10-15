@@ -1,3 +1,5 @@
+[![Docker Automated build](https://img.shields.io/docker/image-size/andgineer/allure)](https://hub.docker.com/r/andgineer/allure)
+
 [Docker container](https://hub.docker.com/r/andgineer/allure) that generates Yandex Allure test report
 
 ## About
