@@ -38,6 +38,9 @@ to serve report on port `8800`:
 There are test results in `./allure-results` folder in this repo, so you can serv report
 with the command above on `localhost:8800`.
 
+> Please note Docker expects absolute paths thus `${PWD}` is used 
+> to get the current working directory. 
+
 ## Allure Releases
 
 [allure-framework](https://github.com/allure-framework/allure2/releases)
