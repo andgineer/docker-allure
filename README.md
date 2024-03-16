@@ -11,6 +11,13 @@ Example of Allure usage see in [my blog](https://sorokin.engineer/posts/en/pytes
 
 ## Usage
 
+### Save test results to `./allure-results`
+
+    pip install allure-pytest
+    pytest --alluredir=./allure-results
+
+### Serve report on `localhost:8800`
+
 If test results are in `./allure-results` you can generate report in `./allure-report` like this:
 
     docker run --rm -it \
