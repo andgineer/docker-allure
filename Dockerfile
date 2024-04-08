@@ -12,7 +12,7 @@ RUN set -e && curl --insecure -L -o /tmp/allure.tgz \
          $ALLURE_REPO/$ALLURE_VERSION/allure-commandline-$ALLURE_VERSION.tgz && \
     mkdir -p $ALLURE_HOME
 RUN set -e && tar -xzf /tmp/allure.tgz -C $(dirname $ALLURE_HOME) && \
-    rm -rf /tmp/* && \k
+    rm -rf /tmp/* && \
     chmod -R +x $ALLURE_HOME/bin
 
 ENV PATH=$PATH:$ALLURE_HOME/bin
