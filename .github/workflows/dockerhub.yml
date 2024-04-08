@@ -36,8 +36,6 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/allure:latest
-          cache-from: type=registry,ref=user/app:latest
-          cache-to: type=inline
           platforms: |-
               linux/amd64
               linux/arm64
