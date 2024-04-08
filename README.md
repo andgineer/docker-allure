@@ -24,7 +24,7 @@ If test results are in `./allure-results` you can generate report in `./allure-r
         -v ${PWD}/allure-results:/allure-results \
         -v ${PWD}/allure-report:/allure-report \
         andgineer/allure \
-        ./allure generate /allure-results -o /allure-report --clean
+        allure generate /allure-results -o /allure-report --clean
 
 to serve report on port `8800`:
 
@@ -33,7 +33,7 @@ to serve report on port `8800`:
         -v ${PWD}/allure-report:/allu-report \
         -p 8800:80 \
         andgineer/allure \
-        ./allure serve -p 80 /allure-results
+        allure serve -p 80 /allure-results
 
 There are test results in `./allure-results` folder in this repo, so you can serv report
 with the command above on `localhost:8800`.

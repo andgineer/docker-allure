@@ -1,14 +1,25 @@
-FROM openjdk:8-jre
+FROM openjdk:8-jre-alpine
 
-ENV ALLURE="allure-2.21.0"
-COPY "${ALLURE}.tgz" /
+ARG ALLURE_VERSION=2.27.0
+ARG ALLURE_REPO=https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline
+ARG ALLURE_HOME=/opt/allure-$ALLURE_VERSION/
 
-RUN apt-get update \
-    && apt-get install tar \
-    && tar -xvf "${ALLURE}.tgz" \
-    && chmod -R +x /${ALLURE}/bin
+RUN apk update && \
+    apk add --no-cache bash wget && \
+    rm -rf /var/cache/apk/*
+
+RUN wget \
+#      --no-check-certificate \
+      --no-verbose \
+      -O /tmp/allure.tgz \
+      $ALLURE_REPO/$ALLURE_VERSION/allure-commandline-$ALLURE_VERSION.tgz && \
+    mkdir -p $ALLURE_HOME && \
+    tar -xf /tmp/allure.tgz -C $(dirname $ALLURE_HOME) && \
+    rm -rf /tmp/* && \
+    chmod -R +x $ALLURE_HOME/bin
+
+ENV PATH=$PATH:$ALLURE_HOME/bin
 
 VOLUME ["/allure-results"]
 VOLUME ["/allure-report"]
 
-WORKDIR /${ALLURE}/bin
