@@ -8,13 +8,13 @@ RUN apk update && \
     apk add --no-cache bash wget && \
     rm -rf /var/cache/apk/*
 
-RUN wget \
+RUN set -e && wget \
 #      --no-check-certificate \
-      --no-verbose \
+#      --no-verbose \
       -O /tmp/allure.tgz \
       $ALLURE_REPO/$ALLURE_VERSION/allure-commandline-$ALLURE_VERSION.tgz && \
-    mkdir -p $ALLURE_HOME && \
-    tar -xf /tmp/allure.tgz -C $(dirname $ALLURE_HOME) && \
+    mkdir -p $ALLURE_HOME
+RUN set -e && tar -vxf /tmp/allure.tgz -C $(dirname $ALLURE_HOME) && \
     rm -rf /tmp/* && \
     chmod -R +x $ALLURE_HOME/bin
 
