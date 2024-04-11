@@ -5,7 +5,7 @@ ARG ALLURE_REPO=https://repo.maven.apache.org/maven2/io/qameta/allure/allure-com
 ARG ALLURE_HOME=/opt/allure-$ALLURE_VERSION/
 
 RUN apk update && \
-    apk add --no-cache bash curl python3 python3-pip && \
+    apk add --no-cache bash curl python3 py3-pip && \
     rm -rf /var/cache/apk/* && \
     curl -L -o /tmp/allure.tgz \
          $ALLURE_REPO/$ALLURE_VERSION/allure-commandline-$ALLURE_VERSION.tgz && \
