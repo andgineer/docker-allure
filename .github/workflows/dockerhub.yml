@@ -29,13 +29,16 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
+      - name: Get Allure version
+        run: echo ::set-env name=ALLURE_VERSION::$(grep 'ARG ALLURE_VERSION' Dockerfile | cut -d'=' -f2)
+
       - name: Build and push to docker hub
         uses: docker/build-push-action@v5
         with:
           context: ./
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/allure:latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/allure:${{ env.ALLURE_VERSION }}, ${{ secrets.DOCKER_HUB_USERNAME }}/allure:latest
           platforms: |-
               linux/amd64
               linux/arm64
