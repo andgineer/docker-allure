@@ -11,7 +11,7 @@ RUN apk update && \
          $ALLURE_REPO/$ALLURE_VERSION/allure-commandline-$ALLURE_VERSION.tgz && \
     mkdir -p $ALLURE_HOME && \
     tar -xzf /tmp/allure.tgz -C $(dirname $ALLURE_HOME) && \
-    python -m pip install Jinja2 && \
+    python3 -m pip install Jinja2 && \
     rm -rf /tmp/* && \
     chmod -R +x $ALLURE_HOME/bin
 
