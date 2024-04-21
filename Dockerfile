@@ -11,7 +11,6 @@ RUN apk update && \
          $ALLURE_REPO/$ALLURE_VERSION/allure-commandline-$ALLURE_VERSION.tgz && \
     mkdir -p $ALLURE_HOME && \
     tar -xzf /tmp/allure.tgz -C $(dirname $ALLURE_HOME) && \
-    python3 -m pip freeze && \
     rm -rf /tmp/* && \
     chmod -R +x $ALLURE_HOME/bin
 
@@ -26,9 +25,10 @@ RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
 ENV PATH="/.venv/bin:$PATH"
 
 RUN allure --version && \
+    python -c "import github_custom_actions; print('github_custom_actions', github_custom_actions.__version__)" && \
     python --version && \
     uv --version && \
-    python -c "import github_custom_actions; print('github_custom_actions', github_custom_actions.__version__)"
+    uv pip list
 
 # Create a virtual environment in the container
 #RUN python3 -m venv /opt/venv
