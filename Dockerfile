@@ -24,17 +24,17 @@ RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 ENV PATH="/root/.cargo/bin:$PATH"
 
 # Create and activate virtual environment in the /.venv
-RUN uv venv .venv && echo $PWD
+RUN uv venv .venv
 ENV PATH="/.venv/bin:$PATH"
 
 # install github-custom-actions
 RUN uv pip install --upgrade github-custom-actions && \
-    uv pip list \
+    uv pip list
 
 RUN allure --version && \
     python -c "import github_custom_actions; print('github_custom_actions', github_custom_actions.__version__)" && \
     python --version && \
-    uv --version && \
+    uv --version
 
 # Create a virtual environment in the container
 #RUN python3 -m venv /opt/venv
