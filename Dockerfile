@@ -19,16 +19,22 @@ ENV PATH=$PATH:$ALLURE_HOME/bin
 VOLUME ["/allure-results"]
 VOLUME ["/allure-report"]
 
-# Create virtual environment in the /.venv
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
-    uv venv .venv
+# Install UV
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV PATH="/root/.cargo/bin:$PATH"
+
+# Create and activate virtual environment in the /.venv
+RUN uv venv .venv && echo $PWD
 ENV PATH="/.venv/bin:$PATH"
+
+# install github-custom-actions
+RUN uv pip install --upgrade github-custom-actions && \
+    uv pip list \
 
 RUN allure --version && \
     python -c "import github_custom_actions; print('github_custom_actions', github_custom_actions.__version__)" && \
     python --version && \
     uv --version && \
-    uv pip list
 
 # Create a virtual environment in the container
 #RUN python3 -m venv /opt/venv
