@@ -1,6 +1,6 @@
 FROM amazoncorretto:11-alpine-jdk
 
-ARG ALLURE_VERSION=2.28.0
+ARG ALLURE_VERSION=2.32.0
 ARG ALLURE_REPO=https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline
 ARG ALLURE_HOME=/opt/allure-$ALLURE_VERSION/
 

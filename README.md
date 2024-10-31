@@ -1,24 +1,24 @@
 [![Docker Automated build](https://img.shields.io/docker/image-size/andgineer/allure)](https://hub.docker.com/r/andgineer/allure)
 
-[Docker container](https://hub.docker.com/r/andgineer/allure) that generates Yandex Allure test report
+[Docker container](https://hub.docker.com/r/andgineer/allure) for generating Yandex Allure test report
 
 ## About
 
-[Yandex Allure](https://github.com/allure-framework/allure2/releases) creates beautiful and 
-easy to navigate test reports.
+[Yandex Allure](https://github.com/allure-framework/allure2/releases) generates visually appealing and easily navigable test reports.
 
-Example of Allure usage see in [my blog](https://sorokin.engineer/posts/en/pytest_allure_selenium_auto_screenshot.html)
+For usage examples, see this [my blog](https://sorokin.engineer/posts/en/pytest_allure_selenium_auto_screenshot.html)
 
 ## Usage
 
-### Save test results to `./allure-results`
+### Generate Test Results
+Save test results to `./allure-results`:
 
     pip install allure-pytest
     pytest --alluredir=./allure-results
 
-### Serve report on `localhost:8800`
+### Generate and View Reports
 
-If test results are in `./allure-results` you can generate report in `./allure-report` like this:
+Generate report in ./allure-report from results in ./allure-results:
 
     docker run --rm -it \
         -v ${PWD}/allure-results:/allure-results \
@@ -26,7 +26,7 @@ If test results are in `./allure-results` you can generate report in `./allure-r
         andgineer/allure \
         allure generate /allure-results -o /allure-report --clean
 
-to serve report on port `8800`:
+Serve report on `localhost:8800`:
 
     docker run --rm -it \
         -v ${PWD}/allure-results:/allure-results \
@@ -35,13 +35,11 @@ to serve report on port `8800`:
         andgineer/allure \
         allure serve -p 80 /allure-results
 
-There are test results in `./allure-results` folder in this repo, so you can serv report
-with the command above on `localhost:8800`.
+> Docker requires absolute paths, hence ${PWD} is used to reference the current working directory.
 
-> Please note Docker expects absolute paths thus `${PWD}` is used 
-> to get the current working directory. 
+Sample test results are included in the ./allure-results folder. Use the command above to view the report at localhost:8800.
 
-## Allure Releases
+## Allure Framework Releases
 
 [allure-framework](https://github.com/allure-framework/allure2/releases)
 
