@@ -1,6 +1,6 @@
-FROM amazoncorretto:11-alpine-jdk
+FROM amazoncorretto:24-alpine-jdk
 
-ARG ALLURE_VERSION=2.32.0
+ARG ALLURE_VERSION=2.34.1
 ARG ALLURE_REPO=https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline
 ARG ALLURE_HOME=/opt/allure-$ALLURE_VERSION/
 
@@ -13,10 +13,11 @@ RUN apk update && \
     tar -xzf /tmp/allure.tgz -C $(dirname $ALLURE_HOME) && \
     rm -rf /tmp/* && \
     chmod -R +x $ALLURE_HOME/bin && \
-    curl -LsSf https://astral.sh/uv/install.sh | sh
+    curl -LsSf https://astral.sh/uv/install.sh | sh && \
+    $HOME/.local/bin/uv --version
 
 ENV PATH=$PATH:$ALLURE_HOME/bin
-ENV PATH="/root/.cargo/bin:$PATH"
+ENV PATH="/root/.local/bin:$PATH"
 
 VOLUME ["/allure-results"]
 VOLUME ["/allure-report"]

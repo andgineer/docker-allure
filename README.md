@@ -30,10 +30,10 @@ Serve report on `localhost:8800`:
 
     docker run --rm -it \
         -v ${PWD}/allure-results:/allure-results \
-        -v ${PWD}/allure-report:/allu-report \
+        -v ${PWD}/allure-report:/allure-report \
         -p 8800:80 \
         andgineer/allure \
-        allure serve -p 80 /allure-results
+        allure serve -h 0.0.0.0 -p 80 /allure-results
 
 > Docker requires absolute paths, hence ${PWD} is used to reference the current working directory.
 
