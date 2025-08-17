@@ -47,3 +47,17 @@ jobs:
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.ALLURE_VERSION }}
+          release_name: Release ${{ env.ALLURE_VERSION }}
+          body: |
+            Release for version v${{ env.ALLURE_VERSION }}
+            Docker image: https://hub.docker.com/r/andgineer/allure/tags?page=&page_size=&ordering=&name=${{ env.ALLURE_VERSION }}
+          draft: false
+          prerelease: false
