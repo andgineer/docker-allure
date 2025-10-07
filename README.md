@@ -1,46 +1,76 @@
 [![Docker Automated build](https://img.shields.io/docker/image-size/andgineer/allure)](https://hub.docker.com/r/andgineer/allure)
 
-[Docker container](https://hub.docker.com/r/andgineer/allure) for generating Yandex Allure test report
+# Docker Allure
+
+[Docker container](https://hub.docker.com/r/andgineer/allure) for generating Allure test reports.
 
 ## About
 
-[Yandex Allure](https://github.com/allure-framework/allure2/releases) generates visually appealing and easily navigable test reports.
+[Allure Framework](https://github.com/allure-framework/allure2/releases) generates visually appealing and easily navigable test reports from your test results.
 
-For usage examples, see this [my blog](https://sorokin.engineer/posts/en/pytest_allure_selenium_auto_screenshot.html)
+This Docker image packages:
+- **Allure Framework** - Test report generation
+- **Amazon Corretto** - Java runtime for Allure
+- **Python 3 + uv** - For Python dependencies
+- **github-custom-actions** - Python package for CI/CD integration
 
-## Usage
+For usage examples, see [my blog](https://sorokin.engineer/posts/en/pytest_allure_selenium_auto_screenshot.html).
 
-### Generate Test Results
+## Quick Start
+
+### 1. Generate Test Results
 Save test results to `./allure-results`:
 
-    pip install allure-pytest
-    pytest --alluredir=./allure-results
+```bash
+pip install allure-pytest
+pytest --alluredir=./allure-results
+```
 
-### Generate and View Reports
+### 2. Generate Report
+Generate HTML report from `./allure-results` to `./allure-report`:
 
-Generate report in ./allure-report from results in ./allure-results:
+```bash
+docker run --rm -it \
+    -v ${PWD}/allure-results:/allure-results \
+    -v ${PWD}/allure-report:/allure-report \
+    andgineer/allure \
+    allure generate /allure-results -o /allure-report --clean
+```
 
-    docker run --rm -it \
-        -v ${PWD}/allure-results:/allure-results \
-        -v ${PWD}/allure-report:/allure-report \
-        andgineer/allure \
-        allure generate /allure-results -o /allure-report --clean
+### 3. Serve Report
+View the report at `localhost:8800`:
 
-Serve report on `localhost:8800`:
+```bash
+docker run --rm -it \
+    -v ${PWD}/allure-results:/allure-results \
+    -v ${PWD}/allure-report:/allure-report \
+    -p 8800:80 \
+    andgineer/allure \
+    allure serve -h 0.0.0.0 -p 80 /allure-results
+```
 
-    docker run --rm -it \
-        -v ${PWD}/allure-results:/allure-results \
-        -v ${PWD}/allure-report:/allure-report \
-        -p 8800:80 \
-        andgineer/allure \
-        allure serve -h 0.0.0.0 -p 80 /allure-results
+> **Note:** Docker requires absolute paths - `${PWD}` references your current working directory.
 
-> Docker requires absolute paths, hence ${PWD} is used to reference the current working directory.
+### Try It Out
+Sample test results are included in `./allure-results/`. Run the serve command above to view the report at `localhost:8800`.
 
-Sample test results are included in the ./allure-results folder. Use the command above to view the report at localhost:8800.
+## Building Locally
 
-## Allure Framework Releases
+Build the Docker image:
 
-[allure-framework](https://github.com/allure-framework/allure2/releases)
+```bash
+docker build -t andgineer/allure .
+```
+
+## Volume Mounts
+
+- `/allure-results` - Input directory for test result files
+- `/allure-report` - Output directory for generated HTML reports
+
+## Resources
+
+- [Allure Framework Releases](https://github.com/allure-framework/allure2/releases)
+- [Docker Hub](https://hub.docker.com/r/andgineer/allure)
+- [Allure Documentation](https://docs.qameta.io/allure/)
 
 
