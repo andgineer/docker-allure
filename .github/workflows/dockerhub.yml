@@ -34,7 +34,20 @@ jobs:
           ALLURE_VERSION=$(grep 'ARG ALLURE_VERSION' Dockerfile | cut -d'=' -f2)
           echo "ALLURE_VERSION=${ALLURE_VERSION}" >> $GITHUB_ENV
 
+      - name: Check if release exists
+        id: check_release
+        run: |
+          if gh release view ${{ env.ALLURE_VERSION }} &>/dev/null; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "::warning::Release ${{ env.ALLURE_VERSION }} already exists, skipping Docker build and push"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build and push to docker hub
+        if: steps.check_release.outputs.exists == 'false'
         uses: docker/build-push-action@v5
         with:
           context: ./
@@ -46,18 +59,17 @@ jobs:
               linux/arm64
 
       - name: Image digest
+        if: steps.check_release.outputs.exists == 'false'
         run: echo ${{ steps.docker_build.outputs.digest }}
 
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
+        if: steps.check_release.outputs.exists == 'false'
+        run: |
+          gh release create ${{ env.ALLURE_VERSION }} \
+            --title "Release ${{ env.ALLURE_VERSION }}" \
+            --notes "Release for version v${{ env.ALLURE_VERSION }}
+
+          Docker image: https://hub.docker.com/r/andgineer/allure/tags?page=&page_size=&ordering=&name=${{ env.ALLURE_VERSION }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ env.ALLURE_VERSION }}
-          release_name: Release ${{ env.ALLURE_VERSION }}
-          body: |
-            Release for version v${{ env.ALLURE_VERSION }}
-            Docker image: https://hub.docker.com/r/andgineer/allure/tags?page=&page_size=&ordering=&name=${{ env.ALLURE_VERSION }}
-          draft: false
-          prerelease: false
