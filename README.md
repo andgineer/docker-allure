@@ -71,9 +71,13 @@ docker build -t andgineer/allure .
 
 To publish a new Allure version:
 
-1. Update `ALLURE_VERSION` in `Dockerfile` to the [latest Allure release](https://github.com/allure-framework/allure2/releases)
+1. Update the version in `.github/workflows/dockerhub.yml` matrix
 2. Commit and push to master: `git commit -am "upgrade to Allure X.XX.X" && git push`
-3. GitHub Actions automatically builds, tests, and publishes to Docker Hub
+3. GitHub Actions automatically builds, tests, and publishes both 2.x and 3.x versions to Docker Hub
+
+**Available tags:**
+- `2.x.x`, `2`, `latest` - Allure 2.x
+- `3.x.x`, `3` - Allure 3.x
 
 The workflow only publishes if no GitHub release exists for that version.
 

@@ -13,6 +13,16 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        include:
+          - version: "2.36.0"
+            major: "2"
+            is_latest: true
+          - version: "3.0.0"
+            major: "3"
+            is_latest: false
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,17 +39,12 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      - name: Get Allure version
-        run: |
-          ALLURE_VERSION=$(grep 'ARG ALLURE_VERSION' Dockerfile | cut -d'=' -f2)
-          echo "ALLURE_VERSION=${ALLURE_VERSION}" >> $GITHUB_ENV
-
       - name: Check if release exists
         id: check_release
         run: |
-          if gh release view ${{ env.ALLURE_VERSION }} &>/dev/null; then
+          if gh release view ${{ matrix.version }} &>/dev/null; then
             echo "exists=true" >> $GITHUB_OUTPUT
-            echo "::warning::Release ${{ env.ALLURE_VERSION }} already exists, skipping Docker build and push"
+            echo "::warning::Release ${{ matrix.version }} already exists, skipping Docker build and push"
           else
             echo "exists=false" >> $GITHUB_OUTPUT
           fi
@@ -57,16 +62,32 @@ jobs:
           context: ./
           file: ./Dockerfile
           load: true
-          tags: allure-test:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          build-args: |
+            ALLURE_VERSION=${{ matrix.version }}
+          tags: allure-test:${{ matrix.version }}
+          cache-from: type=gha,scope=allure-${{ matrix.major }}
+          cache-to: type=gha,mode=max,scope=allure-${{ matrix.major }}
 
       - name: Run tests
         if: steps.check_release.outputs.exists == 'false'
         env:
-          ALLURE_IMAGE: allure-test:latest
+          ALLURE_IMAGE: allure-test:${{ matrix.version }}
         run: |
           uv run pytest tests/ -v
+
+      - name: Prepare Docker tags
+        if: steps.check_release.outputs.exists == 'false'
+        id: tags
+        run: |
+          TAGS="${{ secrets.DOCKER_HUB_USERNAME }}/allure:${{ matrix.version }}"
+          TAGS="${TAGS},${{ secrets.DOCKER_HUB_USERNAME }}/allure:${{ matrix.major }}"
+
+          # Add 'latest' tag only for the version marked as latest
+          if [ "${{ matrix.is_latest }}" = "true" ]; then
+            TAGS="${TAGS},${{ secrets.DOCKER_HUB_USERNAME }}/allure:latest"
+          fi
+
+          echo "tags=${TAGS}" >> $GITHUB_OUTPUT
 
       - name: Build and push to docker hub
         if: steps.check_release.outputs.exists == 'false'
@@ -75,11 +96,13 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/allure:${{ env.ALLURE_VERSION }}, ${{ secrets.DOCKER_HUB_USERNAME }}/allure:latest
+          build-args: |
+            ALLURE_VERSION=${{ matrix.version }}
+          tags: ${{ steps.tags.outputs.tags }}
           platforms: |-
               linux/amd64
               linux/arm64
-          cache-from: type=gha
+          cache-from: type=gha,scope=allure-${{ matrix.major }}
 
       - name: Image digest
         if: steps.check_release.outputs.exists == 'false'
@@ -89,10 +112,23 @@ jobs:
         id: create_release
         if: steps.check_release.outputs.exists == 'false'
         run: |
-          gh release create ${{ env.ALLURE_VERSION }} \
-            --title "Release ${{ env.ALLURE_VERSION }}" \
-            --notes "Release for version v${{ env.ALLURE_VERSION }}
+          # Determine tags for release notes
+          TAGS="- \`${{ secrets.DOCKER_HUB_USERNAME }}/allure:${{ matrix.version }}\`
+          - \`${{ secrets.DOCKER_HUB_USERNAME }}/allure:${{ matrix.major }}\`"
 
-          Docker image: https://hub.docker.com/r/andgineer/allure/tags?page=&page_size=&ordering=&name=${{ env.ALLURE_VERSION }}"
+          if [ "${{ matrix.is_latest }}" = "true" ]; then
+            TAGS="${TAGS}
+          - \`${{ secrets.DOCKER_HUB_USERNAME }}/allure:latest\`"
+          fi
+
+          gh release create ${{ matrix.version }} \
+            --title "Allure ${{ matrix.version }}" \
+            --notes "Allure ${{ matrix.major }}.x release
+
+          ## Docker Tags
+          ${TAGS}
+
+          ## Docker Hub
+          https://hub.docker.com/r/andgineer/allure/tags"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
