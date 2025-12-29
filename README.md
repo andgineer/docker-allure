@@ -67,6 +67,16 @@ docker build -t andgineer/allure .
 - `/allure-results` - Input directory for test result files
 - `/allure-report` - Output directory for generated HTML reports
 
+## Publishing New Versions
+
+To publish a new Allure version:
+
+1. Update `ALLURE_VERSION` in `Dockerfile` to the [latest Allure release](https://github.com/allure-framework/allure2/releases)
+2. Commit and push to master: `git commit -am "upgrade to Allure X.XX.X" && git push`
+3. GitHub Actions automatically builds, tests, and publishes to Docker Hub
+
+The workflow only publishes if no GitHub release exists for that version.
+
 ## Resources
 
 - [Allure Framework Releases](https://github.com/allure-framework/allure2/releases)
