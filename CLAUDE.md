@@ -42,7 +42,7 @@ docker run --rm -it \
     -v ${PWD}/allure-report:/allure-report \
     -p 8800:80 \
     andgineer/allure \
-    allure serve -p 80 /allure-results
+    allure serve -h 0.0.0.0 -p 80 /allure-results
 ```
 
 ### Development Workflow
