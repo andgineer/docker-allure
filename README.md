@@ -56,10 +56,15 @@ Sample test results are included in `./allure-results/`. Run the serve command a
 
 ## Building Locally
 
-Build the Docker image:
+Build the Docker image (specify Allure version via build-arg):
 
 ```bash
-docker build -t andgineer/allure .
+# Build with specific Allure version
+docker build --build-arg ALLURE_VERSION=2.36.0 -t andgineer/allure .
+
+# Or use latest 2.x from workflow
+ALLURE_VERSION=$(grep -A 1 'version: "2\.' .github/workflows/dockerhub.yml | head -1 | cut -d'"' -f2)
+docker build --build-arg ALLURE_VERSION=$ALLURE_VERSION -t andgineer/allure .
 ```
 
 ## Volume Mounts
@@ -71,9 +76,23 @@ docker build -t andgineer/allure .
 
 To publish a new Allure version:
 
-1. Update the version in `.github/workflows/dockerhub.yml` matrix
-2. Commit and push to master: `git commit -am "upgrade to Allure X.XX.X" && git push`
-3. GitHub Actions automatically builds, tests, and publishes both 2.x and 3.x versions to Docker Hub
+### Automatic Update (Recommended)
+Run the version update script to fetch latest versions from GitHub:
+```bash
+# Check for updates (dry-run)
+uv run update_allure_versions.py --dry-run
+
+# Apply updates
+uv run update_allure_versions.py
+```
+
+This automatically updates `.github/workflows/dockerhub.yml` with the latest Allure 2.x and 3.x versions.
+
+### Manual Update
+Alternatively, edit `.github/workflows/dockerhub.yml` matrix directly to set versions.
+
+### Deploy
+GitHub Actions automatically builds, tests, and publishes both 2.x and 3.x versions to Docker Hub.
 
 **Available tags:**
 - `2.x.x`, `2`, `latest` - Allure 2.x

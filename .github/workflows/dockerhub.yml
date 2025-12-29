@@ -19,9 +19,10 @@ jobs:
           - version: "2.36.0"
             major: "2"
             is_latest: true
-          - version: "3.0.0"
-            major: "3"
-            is_latest: false
+          # Uncomment when Allure 3.x is released:
+          # - version: "3.0.0"
+          #   major: "3"
+          #   is_latest: false
 
     steps:
       - name: Checkout

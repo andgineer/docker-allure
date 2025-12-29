@@ -12,7 +12,12 @@ Pytest test suite for verifying the Docker Allure image functionality.
 ### Build the Docker image
 
 ```bash
-docker build -t allure-test:latest .
+# Build with specific version
+docker build --build-arg ALLURE_VERSION=2.36.0 -t allure-test:latest .
+
+# Or extract version from workflow
+ALLURE_VERSION=$(grep -A 1 'version: "2\.' ../.github/workflows/dockerhub.yml | head -1 | cut -d'"' -f2)
+docker build --build-arg ALLURE_VERSION=$ALLURE_VERSION -t allure-test:latest .
 ```
 
 ### Run tests

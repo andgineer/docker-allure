@@ -21,8 +21,9 @@ This is a Docker container project for generating Yandex Allure test reports. Th
 
 ### Building the Docker Image
 ```bash
-docker build -t andgineer/allure .
+docker build --build-arg ALLURE_VERSION=2.36.0 -t andgineer/allure .
 ```
+Note: ALLURE_VERSION must be specified via build-arg (versions are defined in .github/workflows/dockerhub.yml)
 
 ### Generating Reports from Test Results
 Generate HTML report from allure-results to allure-report:
