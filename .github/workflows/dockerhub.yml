@@ -83,7 +83,6 @@ jobs:
           TAGS="${{ secrets.DOCKER_HUB_USERNAME }}/allure:${{ matrix.version }}"
           TAGS="${TAGS},${{ secrets.DOCKER_HUB_USERNAME }}/allure:${{ matrix.major }}"
 
-          # Add 'latest' tag only for the version marked as latest
           if [ "${{ matrix.is_latest }}" = "true" ]; then
             TAGS="${TAGS},${{ secrets.DOCKER_HUB_USERNAME }}/allure:latest"
           fi
