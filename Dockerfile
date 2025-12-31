@@ -1,4 +1,4 @@
-FROM amazoncorretto:24-alpine-jdk
+FROM amazoncorretto:24-alpine-jdk AS base
 
 # ALLURE_VERSION must be provided via build-arg
 ARG ALLURE_VERSION
@@ -27,7 +27,11 @@ VOLUME ["/allure-report"]
 RUN uv venv .venv
 ENV PATH="/.venv/bin:$PATH"
 
-# install github-custom-actions
+
+# =============================================================================
+# Separate layer for fine-grained cache control to install latest PyPI versions
+FROM base AS packages
+
 RUN uv pip install --upgrade github-custom-actions && \
     uv pip list && \
     allure --version && \

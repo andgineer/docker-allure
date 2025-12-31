@@ -63,6 +63,7 @@ jobs:
           context: ./
           file: ./Dockerfile
           load: true
+          no-cache-filter: packages
           build-args: |
             ALLURE_VERSION=${{ matrix.version }}
           tags: allure-test:${{ matrix.version }}
@@ -96,6 +97,7 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
+          no-cache-filter: packages
           build-args: |
             ALLURE_VERSION=${{ matrix.version }}
           tags: ${{ steps.tags.outputs.tags }}
