@@ -101,7 +101,6 @@ GitHub Actions automatically builds, tests, and publishes both 2.x and 3.x versi
 The workflow only publishes if no GitHub release exists for that version.
 
 ## Resources
-
 - [Allure Framework Releases](https://github.com/allure-framework/allure2/releases)
 - [Docker Hub](https://hub.docker.com/r/andgineer/allure)
 - [Allure Documentation](https://docs.qameta.io/allure/)
